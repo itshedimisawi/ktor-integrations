@@ -16,7 +16,6 @@ import software.amazon.awssdk.services.dynamodb.model.GetItemRequest
 import software.amazon.awssdk.services.dynamodb.model.PutItemRequest
 import java.util.*
 
-
 class AuthenticationRepoImpl(
     private val dynamoDbClient: DynamoDbClient,
     private val sesService: SesService,
@@ -49,7 +48,6 @@ class AuthenticationRepoImpl(
         return newToken
     }
 
-
     override suspend fun signup(email: String, fullName: String, username: String, password: String): AuthResult? =
         dbQuery {
             Users.insertIgnore {
@@ -69,7 +67,6 @@ class AuthenticationRepoImpl(
     }
 
     override suspend fun createPasswordRecovery(email: String): Boolean = dbQuery {
-
         val randomCode = UUID.randomUUID().toString()
         val username = Users.select { Users.email eq email }.singleOrNull()?.get(Users.username) ?: return@dbQuery false
 

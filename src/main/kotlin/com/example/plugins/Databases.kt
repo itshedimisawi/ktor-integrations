@@ -26,9 +26,10 @@ fun Application.configureDatabase() {
         SchemaUtils.createMissingTablesAndColumns(
             Users,
             AuthTokens,
+            // Add tables here
         )
         runBlocking {
-            // You can populate data here
+            // Populate database here
         }
     }
 }

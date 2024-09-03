@@ -2,10 +2,7 @@ package com.example.plugins
 
 import com.example.data.repositories.AuthenticationRepo
 import com.example.data.repositories.AuthenticationRepoImpl
-import com.example.services.S3Service
-import com.example.services.S3ServiceImpl
-import com.example.services.SesService
-import com.example.services.SesServiceImpl
+import com.example.services.*
 import io.ktor.server.application.*
 import org.koin.dsl.module
 import org.koin.ktor.plugin.Koin
@@ -37,22 +34,6 @@ fun Application.configureFrameworks() {
                 DynamoDbClient.builder().region(Region.of(region)).credentialsProvider(credentialsProvider).build()
             }
 
-
-            single<SnsClient> {
-                val accessKey = environment.config.property("aws.prod.sns.access_key").getString()
-                val secretKey = environment.config.property("aws.prod.sns.secret_key").getString()
-                val region = environment.config.property("aws.prod.sns.region").getString()
-
-                val credentialsProvider = StaticCredentialsProvider.create(
-                    AwsBasicCredentials.create(
-                        accessKey,
-                        secretKey
-                    )
-                )
-
-                SnsClient.builder().region(Region.of(region)).credentialsProvider(credentialsProvider).build()
-            }
-
             // Services
             single<S3Service> {
                 val accessKey = environment.config.property("aws.prod.s3.access_key").getString()
@@ -72,6 +53,25 @@ fun Application.configureFrameworks() {
                     s3Client = s3Client,
                     bucketNameOriginal = environment.config.property("aws.prod.s3.bucket_name_original").getString(),
                     bucketName = environment.config.property("aws.prod.s3.bucket_name").getString(),
+                )
+            }
+
+            single<SnsService> {
+                val accessKey = environment.config.property("aws.prod.sns.access_key").getString()
+                val secretKey = environment.config.property("aws.prod.sns.secret_key").getString()
+                val region = environment.config.property("aws.prod.sns.region").getString()
+
+                val credentialsProvider = StaticCredentialsProvider.create(
+                    AwsBasicCredentials.create(
+                        accessKey,
+                        secretKey
+                    )
+                )
+
+                val snsClient = SnsClient.builder().region(Region.of(region)).credentialsProvider(credentialsProvider).build()
+
+                SnsServiceImpl(
+                    snsClient = snsClient,
                 )
             }
 
@@ -107,6 +107,8 @@ fun Application.configureFrameworks() {
                     passwordResetBaseUrl = environment.config.property("aws.prod.ses.password_reset_base_url").getString(),
                 )
             }
+
+
         })
     }
 }
