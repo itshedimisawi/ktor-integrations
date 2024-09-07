@@ -32,12 +32,12 @@ class S3ServiceImpl(
                 val metadataMap = HashMap<String, String>()
                 // Check if images uploaded to that path require resizing or thumbnail creation
                 path.thumbnailSize?.let {
-                    metadataMap["thumbnail-width"] = it.first.toString()
-                    metadataMap["thumbnail-height"] = it.second.toString()
+                    metadataMap["thumbnail-width"] = it.width.toString()
+                    metadataMap["thumbnail-height"] = it.height.toString()
                 }
                 path.resizeTo?.let {
-                    metadataMap["resize-width"] = it.first.toString()
-                    metadataMap["resize-height"] = it.second.toString()
+                    metadataMap["resize-width"] = it.width.toString()
+                    metadataMap["resize-height"] = it.height.toString()
                 }
                 metadata(metadataMap)
                 // this metadata will be then be read by the AWS Lambda to resize the image and create a thumbnail
