@@ -58,4 +58,7 @@ dependencies {
     implementation("software.amazon.awssdk:sns:2.20.68")
     implementation("software.amazon.awssdk:ses:2.20.68")
     implementation("software.amazon.awssdk:dynamodb:2.20.68")
+
+
+    implementation("com.stripe:stripe-java:26.2.0")
 }

@@ -16,13 +16,14 @@ import software.amazon.awssdk.services.ses.SesClient
 import software.amazon.awssdk.services.sns.SnsClient
 
 fun Application.configureFrameworks() {
+    val isDev = environment.config.property("ktor.development").getString().toBoolean()
     install(Koin) {
         slf4jLogger()
         modules(module {
             single<DynamoDbClient> {
-                val accessKey = environment.config.property("aws.prod.dynamodb.access_key").getString()
-                val secretKey = environment.config.property("aws.prod.dynamodb.secret_key").getString()
-                val region = environment.config.property("aws.prod.dynamodb.region").getString()
+                val accessKey = environment.config.property("${if (isDev) "dev" else "prod"}.dynamodb.access_key").getString()
+                val secretKey = environment.config.property("${if (isDev) "dev" else "prod"}.dynamodb.secret_key").getString()
+                val region = environment.config.property("${if (isDev) "dev" else "prod"}.dynamodb.region").getString()
 
                 val credentialsProvider = StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
@@ -36,9 +37,9 @@ fun Application.configureFrameworks() {
 
             // Services
             single<S3Service> {
-                val accessKey = environment.config.property("aws.prod.s3.access_key").getString()
-                val secretKey = environment.config.property("aws.prod.s3.secret_key").getString()
-                val region = environment.config.property("aws.prod.s3.region").getString()
+                val accessKey = environment.config.property("${if (isDev) "dev" else "prod"}.s3.access_key").getString()
+                val secretKey = environment.config.property("${if (isDev) "dev" else "prod"}.s3.secret_key").getString()
+                val region = environment.config.property("${if (isDev) "dev" else "prod"}.s3.region").getString()
 
                 val credentialsProvider = StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
@@ -51,15 +52,15 @@ fun Application.configureFrameworks() {
 
                 S3ServiceImpl(
                     s3Client = s3Client,
-                    bucketNameOriginal = environment.config.property("aws.prod.s3.bucket_name_original").getString(),
-                    bucketName = environment.config.property("aws.prod.s3.bucket_name").getString(),
+                    bucketNameOriginal = environment.config.property("${if (isDev) "dev" else "prod"}.s3.bucket_name_original").getString(),
+                    bucketName = environment.config.property("${if (isDev) "dev" else "prod"}.s3.bucket_name").getString(),
                 )
             }
 
             single<SnsService> {
-                val accessKey = environment.config.property("aws.prod.sns.access_key").getString()
-                val secretKey = environment.config.property("aws.prod.sns.secret_key").getString()
-                val region = environment.config.property("aws.prod.sns.region").getString()
+                val accessKey = environment.config.property("${if (isDev) "dev" else "prod"}.sns.access_key").getString()
+                val secretKey = environment.config.property("${if (isDev) "dev" else "prod"}.sns.secret_key").getString()
+                val region = environment.config.property("${if (isDev) "dev" else "prod"}.sns.region").getString()
 
                 val credentialsProvider = StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
@@ -76,9 +77,9 @@ fun Application.configureFrameworks() {
             }
 
             single<SesService> {
-                val accessKey = environment.config.property("aws.prod.ses.access_key").getString()
-                val secretKey = environment.config.property("aws.prod.ses.secret_key").getString()
-                val region = environment.config.property("aws.prod.ses.region").getString()
+                val accessKey = environment.config.property("${if (isDev) "dev" else "prod"}.ses.access_key").getString()
+                val secretKey = environment.config.property("${if (isDev) "dev" else "prod"}.ses.secret_key").getString()
+                val region = environment.config.property("${if (isDev) "dev" else "prod"}.ses.region").getString()
 
                 val credentialsProvider = StaticCredentialsProvider.create(
                     AwsBasicCredentials.create(
@@ -91,8 +92,8 @@ fun Application.configureFrameworks() {
 
                 SesServiceImpl(
                     sesClient = sesClient,
-                    senderEmail = environment.config.property("aws.prod.ses.sender").getString(),
-                    configurationSet = environment.config.property("aws.prod.ses.config_set").getString(),
+                    senderEmail = environment.config.property("${if (isDev) "dev" else "prod"}.ses.sender").getString(),
+                    configurationSet = environment.config.property("${if (isDev) "dev" else "prod"}.ses.config_set").getString(),
                 )
             }
 
@@ -101,14 +102,12 @@ fun Application.configureFrameworks() {
                 AuthenticationRepoImpl(
                     dynamoDbClient = inject<DynamoDbClient>().value,
                     sesService = inject<SesService>().value,
-                    passwordResetCodeTable = environment.config.property("aws.prod.dynamodb.password_reset_code_table").getString(),
-                    passwordResetCodeTableKey = environment.config.property("aws.prod.dynamodb.password_reset_code_table_key").getString(),
-                    passwordRecoveryTemplate = environment.config.property("aws.prod.ses.password_recovery_template").getString(),
-                    passwordResetBaseUrl = environment.config.property("aws.prod.ses.password_reset_base_url").getString(),
+                    passwordResetCodeTable = environment.config.property("${if (isDev) "dev" else "prod"}.dynamodb.password_reset_code_table").getString(),
+                    passwordResetCodeTableKey = environment.config.property("${if (isDev) "dev" else "prod"}.dynamodb.password_reset_code_table_key").getString(),
+                    passwordRecoveryTemplate = environment.config.property("${if (isDev) "dev" else "prod"}.ses.password_recovery_template").getString(),
+                    passwordResetBaseUrl = environment.config.property("${if (isDev) "dev" else "prod"}.ses.password_reset_base_url").getString(),
                 )
             }
-
-
         })
     }
 }

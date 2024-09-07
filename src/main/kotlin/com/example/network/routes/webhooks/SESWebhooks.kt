@@ -15,9 +15,10 @@ import org.koin.ktor.ext.inject
 
 fun Route.SesWebhooks() {
     val snsService by inject<SnsService>()
-    val topicARNBounce = environment!!.config.property("aws.prod.sns.topic_arn_bounce").getString()
-    val topicARNComplaint = environment!!.config.property("aws.prod.sns.topic_arn_complaint").getString()
-    val topicARUnsubscribe = environment!!.config.property("aws.prod.sns.topic_arn_unsubscribe").getString()
+    val isDev = environment!!.config.property("project.isDev").getString().toBoolean()
+    val topicARNBounce = environment!!.config.property("${if (isDev) "dev" else "prod"}.sns.topic_arn_bounce").getString()
+    val topicARNComplaint = environment!!.config.property("${if (isDev) "dev" else "prod"}.sns.topic_arn_complaint").getString()
+    val topicARUnsubscribe = environment!!.config.property("${if (isDev) "dev" else "prod"}.sns.topic_arn_unsubscribe").getString()
 
     post("/webhooks/sns/handle-bounces") {
         val header = call.request.headers[SNS_MESSAGE_TYPE_HEADER]
@@ -83,7 +84,7 @@ fun Route.SesWebhooks() {
             }
 
             SNS_MESSAGE_TYPE_NOTIFICATION-> {
-                val body = call.receiveText()
+                //val body = call.receiveText()
                 // Do something with the notification when a user unsubscribes
 
                 call.respond(HttpStatusCode.OK, SNSResponse(true, "Notification received"))

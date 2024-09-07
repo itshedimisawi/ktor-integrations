@@ -13,13 +13,12 @@ import org.jetbrains.exposed.sql.transactions.transaction
 
 fun Application.configureDatabase() {
     val isDev = environment.config.property("project.isDev").getString().toBoolean()
-    val storageConfig = if (isDev) "aws.dev.rds" else "aws.prod.rds"
     Database.connect(
         createHikariDataSource(
-            url = environment.config.property("${storageConfig}.jdbcURL").getString(),
-            driver = environment.config.property("${storageConfig}.driverClassName").getString(),
-            user = environment.config.property("${storageConfig}.user").getString(),
-            pass = environment.config.property("${storageConfig}.password").getString(),
+            url = environment.config.property("${if (isDev) "dev" else "prod"}.jdbcURL").getString(),
+            driver = environment.config.property("${if (isDev) "dev" else "prod"}.driverClassName").getString(),
+            user = environment.config.property("${if (isDev) "dev" else "prod"}.user").getString(),
+            pass = environment.config.property("${if (isDev) "dev" else "prod"}.password").getString(),
         )
     )
     transaction {
