@@ -1,7 +1,15 @@
 
 # <img src="./repo_assets/ktor.png" width=28 height=28 alt="Ktor"> Ktor Integrations
 
-A boilerplate Ktor project providing common cloud APIs integrations, including Authentication, static content delivery with async image resizing and thumbnail generation, mailing services, databases, payment gateways and more.
+A boilerplate Ktor project providing common cloud APIs integrations, including authentication, static content handling with async image resizing and thumbnail generation, mailing services, databases, payment gateways and more.
+
+<p>
+  <br>
+  <img alt="Kotlin" src="./repo_assets/kotlin.png" height="24"/>
+  <img alt="Ktor" src="./repo_assets/kotlinktor.png" height="24"/>
+  <img alt="AWS" src="./repo_assets/aws.png" height="24"/>
+  <img alt="Stripe" src="./repo_assets/stripe.png" height="24"/>
+</p>
 
 ## Features
 ### Authentication
@@ -10,7 +18,7 @@ A boilerplate Ktor project providing common cloud APIs integrations, including A
 - **Password recovery**: Requesting a password recovery code / link via email using AWS Simple Email Service (SES).
 - **Temporary password recovery codes**: Stored in AWS DynamoDB with a Time-To-Live (TTL) value, so they expire after a set period.
 
-### S3 Static Content
+### Handling static content
 
 - **Async Image resizing and thumbnail generation using AWS Lambda**: This required 2 S3 buckets configuration. Follow the guide in this [repo](https://github.com/itshedimisawi/aws-lambda-resize-s3).
 - **Defining image paths**: Images are uploaded to S3 buckets and image and thumbnail sizes specified for each path by `StaticPath` objects.
@@ -29,7 +37,7 @@ sealed class StaticPath(
 }
 ```
 
-### SES integration
+### Email service
 
 - **Email Sending**: Uses AWS SES to send transactional and recovery emails.
 - **Bounce, complaint and unsubscribe events Handling**: handled through SNS Webhooks to comply with SES policy.
@@ -97,3 +105,10 @@ Development (dev)
 <img src="./repo_assets/linkedin.png" alt="Linkedin" height="40"/>
 </a> 
 <br>
+
+## Find this repository useful? :heart:
+Support it by joining __[stargazers](https://github.com/itshedimisawi/ktor-integrations/stargazers)__ for this repository. :star:
+
+## Contributing
+
+Contributions are welcome from everyone! Whether it's a bug fix, new feature, or improvements to the documentation, your help is appreciated.
